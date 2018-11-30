@@ -24,6 +24,8 @@ class SeleniumDriver():
     # 7. element_click
     # 8. is_element_present
     # 9. element_clear
+    #10. is_element_displayed
+    #11. is_element_enabled
 
 ##########################################################
     def launch_url(self, url):
@@ -199,16 +201,60 @@ class SeleniumDriver():
             print('Failed to get text on the element')
             return None
 
+    ##########################################################
 
+    def is_element_displayed(self, locator='', locator_type='id', element=None):
 
+        try:
+            if locator:
+                element = self.get_element(locator, locator_type)
+            if element is not None:
+                result = element.is_displayed()
+                print('Element present using locator: {} and locator type: {}'
+                      .format (locator, locator_type))
+                return result
+            else:
+                print('!!! Element is not present using locator: {} and locator type: {}'
+                      .format (locator, locator_type))
+                return False
+        except:
+            print('!!! Element is not found!!!')
+            return False
 
+    ##########################################################
 
+    def is_element_enabled(self, locator='', locator_type='id', element=None):
 
+        try:
+            if locator:
+                element = self.get_element(locator, locator_type)
+            if element is not None:
+                result = element.is_enabled()
+                print('Element present using locator: {} and locator type: {}'
+                      .format (locator, locator_type))
+                return result
+            else:
+                print('!!! Element is not present using locator: {} and locator type: {}'
+                      .format (locator, locator_type))
+                return False
+        except:
+            print('!!! Element is not found!!!')
+            return False
 
+    ##########################################################
 
+    def scroll_browser(self, direction="up"):
 
-
-
-
+        try:
+            if direction.lower() == 'up':
+                self.driver.execute_script('window.scrollBy(0,-1000)')
+                print('Window scrolled by execution ')
+            elif direction.lower()=='down':
+                self.driver.execute_script('window.scrollBy(0,1000')
+                pass
+            else:
+                print('!!!! Invalid direction ')
+        except:
+            print('**** EXCEPTION OCCURED while scroll_by **** ')
 
 
