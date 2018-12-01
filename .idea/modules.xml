@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/POM_CourseEnrollment.iml" filepath="$PROJECT_DIR$/.idea/POM_CourseEnrollment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../POM_Framework/.idea/PageObject_Framework.iml" filepath="$PROJECT_DIR$/../POM_Framework/.idea/PageObject_Framework.iml" />
+    </modules>
+  </component>
+</project>
