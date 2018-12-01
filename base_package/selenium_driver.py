@@ -67,14 +67,14 @@ class SeleniumDriver():
             if locator is not None:
                 get_by = self.get_by_type(locator_type)
                 element = self.driver.find_element(get_by,locator)
-                print('Element is found using locator: {} and locator type{} '.
+                print('Element is found using locator: {} and locator type {} '.
                       format(locator,locator_type))
                 return element
             else:
                 print('!!! LOCATOR ARGUMENT IS EMPTY ')
                 return element
         except:
-            print('!!! ELEMENT IS NOT FOUND USING locator: {} AND LOCATOR TYPE{}'.
+            print('!!! ELEMENT IS NOT FOUND USING locator: {} AND LOCATOR TYPE {}'.
                   format(locator, locator_type))
             return element
 
@@ -247,14 +247,14 @@ class SeleniumDriver():
 
         try:
             if direction.lower() == 'up':
-                self.driver.execute_script('window.scrollBy(0,-1000)')
-                print('Window scrolled by execution ')
+                self.driver.execute_script('window.scrollBy(0,-1000);')
+                print('Window scrolled '+direction)
             elif direction.lower()=='down':
-                self.driver.execute_script('window.scrollBy(0,1000')
-                pass
+                self.driver.execute_script('window.scrollBy(0,1000);')
+                print('Window scrolled '+direction)
             else:
                 print('!!!! Invalid direction ')
-        except:
-            print('**** EXCEPTION OCCURED while scroll_by **** ')
+        except Exception as e:
+            print('**** EXCEPTION OCCURED **** Method name: scroll_browser')
 
 
