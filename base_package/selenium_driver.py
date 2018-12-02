@@ -1,8 +1,14 @@
+'''
+Author: rdinesh0331@ Dineshkumar Rajendran
+
+'''
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from traceback import print_stack
 from selenium.webdriver.support.wait import WebDriverWait
 import selenium.webdriver.support.expected_conditions as ec
+from selenium.webdriver.support.select import Select
 import os
 import time
 from selenium.common.exceptions import *
@@ -187,7 +193,7 @@ class SeleniumDriver():
                 element=self.get_element(locator,locator_type)
             if element:
                 text = element.text
-                print('Afer finding element,size of element: '+str(len(text)))
+                print('After finding element,size of element: '+str(len(text)))
                 if len(text) == 0:
                     text = element.get_attribute("innerText")
                 if len(text)!= 0:
@@ -256,5 +262,80 @@ class SeleniumDriver():
                 print('!!!! Invalid direction ')
         except Exception as e:
             print('**** EXCEPTION OCCURED **** Method name: scroll_browser')
+
+    ##########################################################
+
+    def select_from_list(self, data, locator = '',locator_type='id', select_type="visibletext", element = ''):
+
+        try:
+            if locator:
+                element = self.get_element(locator, locator_type)
+            if element is not None:
+                sel = Select(element)
+                if select_type.lower() == 'visibletext':
+                    sel.select_by_visible_text(data.strip())
+                    print('Value {} selected using visible text'.format(data))
+                elif select_type.lower() == 'index':
+                    sel.select_by_index(data.strip())
+                    print('Value {} selected using index'.format(data))
+                elif select_type.lower() == 'value':
+                    sel.select_by_value(data.strip())
+                    print('Value {} selected using value'.format(data))
+                else:
+                    print('!!! INVALID SELECT TYPE')
+            else:
+                print('!!! ELEMENT IS NOT FOUND')
+        except Exception as e:
+            print('!!! EXCEPTION OCCURED when selecting the list '+ str(e))
+
+    ##########################################################
+
+    def get_elements(self,locator='', locator_type='id'):
+        element = None
+        try:
+            if locator is not None:
+                get_by = self.get_by_type(locator_type)
+                element = self.driver.find_elements(get_by,locator)
+                print('Element list found using locator: {} and locator type {} '.
+                      format(locator,locator_type))
+                return element
+            else:
+                print('!!! LOCATOR ARGUMENT IS EMPTY ')
+                return element
+        except:
+            print('!!! ELEMENT LIST NOT FOUND USING locator: {} AND LOCATOR TYPE {}'.
+                  format(locator, locator_type))
+            return element
+
+    ##########################################################
+
+    def verify_text_contains(self, actualtext, expectedtext):
+
+            print('Expected text from Application web UI: '+expectedtext)
+            print('Actual text from Appplication web UI: '+actualtext)
+            if expectedtext in actualtext:
+                print('Verification contains')
+            else:
+                print('!!! VERIFICATION FAILED')
+
+    ##########################################################
+
+    def verify_text_match(self, actualtext, expectedtext):
+
+            print('Expected text from Application web UI: '+expectedtext)
+            print('Actual text from Appplication web UI: '+actualtext)
+            if expectedtext == actualtext:
+                print('Verification contains')
+            else:
+                print('!!! VERIFICATION FAILED')
+
+    ##########################################################
+
+    def verify_list_match(self,actual_list,expected_list):
+
+        if set(actual_list)==set(expected_list):
+            print('LIST MATCHED')
+        else:
+            print('!!! LIST MATCH FAILED')
 
 
