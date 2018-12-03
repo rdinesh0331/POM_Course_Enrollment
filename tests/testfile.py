@@ -23,10 +23,10 @@ class TestFile(SeleniumDriver):
         # print(sel)
         # # sel.select_by_value("benz")
         # self.select_from_list('Benz','carselect')
-        element_list = self.get_elements('//select[@id="carselect"]//option','xpath')
+        # element_list = self.get_elements('//select[@id="carselect"]//option','xpath')'
+        result = self.verify_data_exists_in_list('Benj','//select[@id="carselect"]//option','xpath')
+        print(result)
 
-        for element in element_list:
-            print(element.text)
 
 
 

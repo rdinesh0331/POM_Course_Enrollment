@@ -315,8 +315,10 @@ class SeleniumDriver():
             print('Actual text from Appplication web UI: '+actualtext)
             if expectedtext in actualtext:
                 print('Verification contains')
+                return True
             else:
                 print('!!! VERIFICATION FAILED')
+                return False
 
     ##########################################################
 
@@ -326,8 +328,10 @@ class SeleniumDriver():
             print('Actual text from Appplication web UI: '+actualtext)
             if expectedtext == actualtext:
                 print('Verification contains')
+                return True
             else:
                 print('!!! VERIFICATION FAILED')
+                return False
 
     ##########################################################
 
@@ -335,7 +339,35 @@ class SeleniumDriver():
 
         if set(actual_list)==set(expected_list):
             print('LIST MATCHED')
+            return True
         else:
             print('!!! LIST MATCH FAILED')
+            return False
+
+
+    ##########################################################
+
+    def verify_data_exists_in_list(self, data, locator='', locator_type='id', elementlist=None):
+
+        try:
+            if locator:
+                elementlist= self.get_elements(locator, locator_type)
+                if elementlist is not None:
+                    for element in elementlist:
+                        if element.text == data:
+                            print ('List value present')
+                            return True
+                    print('!!! Value {} is not present in the element list'.format(data))
+                    return False
+                else:
+                    print('!!! ELEMENT LIST IS BLANK')
+                    return False
+        except Exception as e:
+            print('*** EXCEPTION occured *** '+e)
+            return False
+
+
+
+
 
 
