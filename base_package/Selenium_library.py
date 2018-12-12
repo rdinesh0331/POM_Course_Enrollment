@@ -32,8 +32,15 @@ class SeleniumDriver():
     # 9. element_clear
     #10. is_element_displayed
     #11. is_element_enabled
+    #12. scroll_browser
+    #13. select_from_list
+    #14. get_elements
+    #15. verify_text_contains
+    #16. verify_text_match
+    #17. verify_list_match
+    #18. verify_data_exists_in_list
 
-##########################################################
+    ##########################################################
     def launch_url(self, url):
 
         try:
