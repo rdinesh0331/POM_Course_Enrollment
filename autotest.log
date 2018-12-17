@@ -1,0 +1,9 @@
+12:16:2018 09:54:40 PM - LoginPage - INFO - Element is found using locator: //a[contains(text(),"Login")] and locator type xpath 
+12:16:2018 09:54:40 PM - LoginPage - INFO - Clicked element with locator: //a[contains(text(),"Login")] and locator type: xpath
+12:16:2018 09:54:43 PM - LoginPage - INFO - Element is found using locator: user_email and locator type ID 
+12:16:2018 09:54:43 PM - LoginPage - INFO - data 'test@email.com' sent to element with locator: user_email and locator type: ID
+12:16:2018 09:54:43 PM - LoginPage - INFO - Element is found using locator: user_password and locator type ID 
+12:16:2018 09:54:43 PM - LoginPage - INFO - data 'abcabc' sent to element with locator: user_password and locator type: ID
+12:16:2018 09:54:48 PM - LoginPage - ERROR - !!! ELEMENT IS NOT FOUND USING locator: commit AND LOCATOR TYPE ID
+12:16:2018 09:54:48 PM - LoginPage - ERROR - !!! ELEMENT IS NOT FOUND
+12:16:2018 09:54:48 PM - LoginPage - ERROR - Title Practice | Let's Kode It mismatch, actual title: Let's Kode It

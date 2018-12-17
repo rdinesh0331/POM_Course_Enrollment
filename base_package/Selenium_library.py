@@ -12,17 +12,19 @@ from selenium.webdriver.support.select import Select
 import os
 import time
 from selenium.common.exceptions import *
+import utilities.customlog as cl
 
 #class for GENERIC SELENIUM WEBDRIVER APIs
 
 class SeleniumDriver():
 
+    log = cl.custom_logger(loglevel="DEBUG")
     def __init__(self,driver):
         self.driver = driver
 
     # list of APIs created
     # 1. launch_url
-    # 2. verify_title
+    # 2. get_title
     # 3. get_by_type
     # 4. get_element
     # 5. enter_text
@@ -47,10 +49,30 @@ class SeleniumDriver():
             self.driver.get(url)
             print('Launched URL: '+url)
         except Exception as e:
-            print('***** EXCEPTION  OCCURED *****: '+e)
+            self.log.error('***** EXCEPTION  OCCURED *****: '+e)
 
 ##########################################################
-    
+
+    def get_title(self):
+        return self.driver.title
+
+##########################################################
+
+    def verify_title(self,expected_title):
+        try:
+            actual_title = self.get_title()
+            if expected_title in actual_title:
+                self.log.info('Title: {} matched'.format(expected_title))
+                return True
+            else:
+                self.log.error("Title {} mismatch, actual title: {}".format(expected_title,actual_title))
+                return False
+        except Exception as e:
+            self.log.error ("### EXCEPTION OCCURED "+e)
+            return False
+
+
+##########################################################
     def get_by_type(self, locator_type="id"):
         locator_type = locator_type.lower()
         if locator_type == 'id':
@@ -70,7 +92,7 @@ class SeleniumDriver():
         elif locator_type =='tagname':
             return By.TAG_NAME
         else:
-            print('!!! INVALID LOCATOR TYPE : '+locator_type)
+            self.log.error('!!! INVALID LOCATOR TYPE : '+locator_type)
 
 ##########################################################
     
@@ -80,14 +102,14 @@ class SeleniumDriver():
             if locator is not None:
                 get_by = self.get_by_type(locator_type)
                 element = self.driver.find_element(get_by,locator)
-                print('Element is found using locator: {} and locator type {} '.
+                self.log.info('Element is found using locator: {} and locator type {} '.
                       format(locator,locator_type))
                 return element
             else:
-                print('!!! LOCATOR ARGUMENT IS EMPTY ')
+                self.log.error('!!! LOCATOR ARGUMENT IS EMPTY ')
                 return element
         except:
-            print('!!! ELEMENT IS NOT FOUND USING locator: {} AND LOCATOR TYPE {}'.
+            self.log.error('!!! ELEMENT IS NOT FOUND USING locator: {} AND LOCATOR TYPE {}'.
                   format(locator, locator_type))
             return element
 
@@ -98,17 +120,17 @@ class SeleniumDriver():
         try:
             if element is not None :
                 element.send_keys(data)
-                print("data '{}' sent to element {}".format(data,element))
+                self.log.info("data '{}' sent to element {}".format(data,element))
             else:
                 element = self.get_element(locator,locator_type)
                 if element:
                     element.send_keys(data)
-                    print("data '{}' sent to element with locator: {} and locator type: {}"
+                    self.log.info("data '{}' sent to element with locator: {} and locator type: {}"
                           .format(data, locator, locator_type))
                 else:
-                    print('!!! ELEMENT IS NOT FOUND')
+                    self.log.error('!!! ELEMENT IS NOT FOUND')
         except:
-            print('!!! Cant send data on the element with locator: {} and locator type: {}'
+            self.log.error('!!! Cant send data on the element with locator: {} and locator type: {}'
                   .format(locator, locator_type))
             print_stack()
 
@@ -124,12 +146,12 @@ class SeleniumDriver():
                 element = self.get_element(locator, locator_type)
                 if element:
                     element.click()
-                    print("Clicked element with locator: {} and locator type: {}"
+                    self.log.info("Clicked element with locator: {} and locator type: {}"
                           .format(locator, locator_type))
                 else:
-                    print('!!! ELEMENT IS NOT FOUND')
+                    self.log.error('!!! ELEMENT IS NOT FOUND')
         except:
-            print('!!! Cant click on the element with locator: {} and locator type: {}'
+            self.log.error('!!! Cant click on the element with locator: {} and locator type: {}'
                   .format(locator, locator_type))
             print_stack()
 
@@ -147,9 +169,9 @@ class SeleniumDriver():
                                                      ElementNotInteractableException,
                                                      InvalidElementStateException])
             element=wait.until(ec.presence_of_element_located(byType,locator))
-            print('Element appeared on the webpage')
+            self.log.info('Element appeared on the webpage')
         except:
-            print('Element not appeared on the webpage')
+            self.log.error('Element not appeared on the webpage')
             print_stack()
         return element
 
@@ -161,15 +183,15 @@ class SeleniumDriver():
             if locator:
                 element = self.get_element(locator, locator_type)
             if element is not None:
-                print('Element present using locator: {} and locator type: {}'
+                self.log.info('Element present using locator: {} and locator type: {}'
                       .format (locator, locator_type))
                 return True
             else:
-                print('!!! Element is not present using locator: {} and locator type: {}'
+                self.log.error('!!! Element is not present using locator: {} and locator type: {}'
                       .format (locator, locator_type))
                 return False
         except:
-            print('!!! Element is not found!!!')
+            self.log.error('!!! Element is not found!!!')
             return False
 
 
@@ -182,13 +204,13 @@ class SeleniumDriver():
                  element=self.get_element(locator,locator_type)
              if element:
                  element.clear()
-                 print('Element with locator: {} and locator type: {}'
+                 self.log.info('Element with locator: {} and locator type: {}'
                        .format(locator, locator_type))
              else:
-                 print('!!! Element with locator: {} and locator type: {} is not found'
+                 self.log.error('!!! Element with locator: {} and locator type: {} is not found'
                        .format(locator, locator_type))
          except Exception as e:
-             print('*** EXCEPTION OCCURED ***  '+str(e))
+             self.log.error('*** EXCEPTION OCCURED ***  '+str(e))
 
 
     ##########################################################
@@ -200,18 +222,18 @@ class SeleniumDriver():
                 element=self.get_element(locator,locator_type)
             if element:
                 text = element.text
-                print('After finding element,size of element: '+str(len(text)))
+                self.log.info('After finding element,size of element: '+str(len(text)))
                 if len(text) == 0:
                     text = element.get_attribute("innerText")
                 if len(text)!= 0:
-                    print('The text is "{}"'. format((text)))
+                    self.log.info('The text is "{}"'. format((text)))
                 return text.strip()
             else:
-                print('!!! Element is not found using locator: {} and locator type: {}'
+                self.log.error('!!! Element is not found using locator: {} and locator type: {}'
                       .format(locator, locator_type))
                 return None
         except:
-            print('Failed to get text on the element')
+            self.log.error('Failed to get text on the element')
             return None
 
     ##########################################################
@@ -223,15 +245,15 @@ class SeleniumDriver():
                 element = self.get_element(locator, locator_type)
             if element is not None:
                 result = element.is_displayed()
-                print('Element present using locator: {} and locator type: {}'
+                self.log.info('Element present using locator: {} and locator type: {}'
                       .format (locator, locator_type))
                 return result
             else:
-                print('!!! Element is not present using locator: {} and locator type: {}'
+                self.log.error('!!! Element is not present using locator: {} and locator type: {}'
                       .format (locator, locator_type))
                 return False
         except:
-            print('!!! Element is not found!!!')
+            self.log.error('!!! Element is not found!!!')
             return False
 
     ##########################################################
@@ -243,15 +265,15 @@ class SeleniumDriver():
                 element = self.get_element(locator, locator_type)
             if element is not None:
                 result = element.is_enabled()
-                print('Element present using locator: {} and locator type: {}'
+                self.log.info('Element present using locator: {} and locator type: {}'
                       .format (locator, locator_type))
                 return result
             else:
-                print('!!! Element is not present using locator: {} and locator type: {}'
+                self.log.error('!!! Element is not present using locator: {} and locator type: {}'
                       .format (locator, locator_type))
                 return False
         except:
-            print('!!! Element is not found!!!')
+            self.log.error('!!! Element is not found!!!')
             return False
 
     ##########################################################
@@ -261,14 +283,14 @@ class SeleniumDriver():
         try:
             if direction.lower() == 'up':
                 self.driver.execute_script('window.scrollBy(0,-1000);')
-                print('Window scrolled '+direction)
+                self.log.info('Window scrolled '+direction)
             elif direction.lower()=='down':
                 self.driver.execute_script('window.scrollBy(0,1000);')
-                print('Window scrolled '+direction)
+                self.log.info('Window scrolled '+direction)
             else:
-                print('!!!! Invalid direction ')
+                self.log.error('!!!! Invalid direction ')
         except Exception as e:
-            print('**** EXCEPTION OCCURED **** Method name: scroll_browser')
+            self.log.error('**** EXCEPTION OCCURED **** Method name: scroll_browser')
 
     ##########################################################
 
@@ -281,19 +303,19 @@ class SeleniumDriver():
                 sel = Select(element)
                 if select_type.lower() == 'visibletext':
                     sel.select_by_visible_text(data.strip())
-                    print('Value {} selected using visible text'.format(data))
+                    self.log.info('Value {} selected using visible text'.format(data))
                 elif select_type.lower() == 'index':
                     sel.select_by_index(data.strip())
-                    print('Value {} selected using index'.format(data))
+                    self.log.info('Value {} selected using index'.format(data))
                 elif select_type.lower() == 'value':
                     sel.select_by_value(data.strip())
-                    print('Value {} selected using value'.format(data))
+                    self.log.info('Value {} selected using value'.format(data))
                 else:
-                    print('!!! INVALID SELECT TYPE')
+                    self.log.error('!!! INVALID SELECT TYPE')
             else:
-                print('!!! ELEMENT IS NOT FOUND')
+                self.log.error('!!! ELEMENT IS NOT FOUND')
         except Exception as e:
-            print('!!! EXCEPTION OCCURED when selecting the list '+ str(e))
+            self.log.error('!!! EXCEPTION OCCURED when selecting the list '+ str(e))
 
     ##########################################################
 
@@ -303,14 +325,14 @@ class SeleniumDriver():
             if locator is not None:
                 get_by = self.get_by_type(locator_type)
                 element = self.driver.find_elements(get_by,locator)
-                print('Element list found using locator: {} and locator type {} '.
+                self.log.info('Element list found using locator: {} and locator type {} '.
                       format(locator,locator_type))
                 return element
             else:
-                print('!!! LOCATOR ARGUMENT IS EMPTY ')
+                self.log.error('!!! LOCATOR ARGUMENT IS EMPTY ')
                 return element
         except:
-            print('!!! ELEMENT LIST NOT FOUND USING locator: {} AND LOCATOR TYPE {}'.
+            self.log.error('!!! ELEMENT LIST NOT FOUND USING locator: {} AND LOCATOR TYPE {}'.
                   format(locator, locator_type))
             return element
 
@@ -351,8 +373,7 @@ class SeleniumDriver():
             print('!!! LIST MATCH FAILED')
             return False
 
-
-    ##########################################################
+  ##########################################################
 
     def verify_data_exists_in_list(self, data, locator='', locator_type='id', elementlist=None):
 
@@ -372,6 +393,26 @@ class SeleniumDriver():
         except Exception as e:
             print('*** EXCEPTION occured *** '+e)
             return False
+
+    ##########################################################
+
+    def save_screenshot(self,message):
+
+            filename = message+"."+str(round(time.time()))+".png"
+            screenshotdirectory = '..\screenshots'
+            relativefilepath = screenshotdirectory+filename
+            currentdirectory = os.path.dirname(__file__)
+            destinationfile = os.path.join(currentdirectory, relativefilepath)
+            destinationdirectory = os.path.join((currentdirectory,screenshotdirectory))
+            try:
+                if not os.path.exists(destinationdirectory):
+                    os.mkdir(destinationdirectory)
+                self.driver.save_screenshot(destinationfile)
+                print('Screenshot saved to destination directory: {} and file name: {}'
+                      .format(destinationdirectory,filename))
+            except Exception as e:
+                print ('!!! Exception occured while saving the screenshot '+e)
+
 
 
 
